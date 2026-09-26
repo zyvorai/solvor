@@ -3,7 +3,7 @@
 #
 # Solvor, the Mac app. Run `make help`. macOS with Xcode only; nothing here signs, notarizes or uploads anything.
 .DEFAULT_GOAL := help
-.PHONY: help project build test test-kit test-app run stop open catalog icon export clean
+.PHONY: help project build test test-kit test-app run stop open catalog icon export verify-page dmg release clean
 
 APP      := Solvor
 PROJECT  := $(APP).xcodeproj
@@ -52,6 +52,16 @@ icon: ## regenerate the app icon and menu-bar glyph (needs rsvg-convert)
 export: ## copy this folder into a checkout of the standalone repo: make export DEST=../solvor
 	@test -n "$(DEST)" || { echo 'usage: make export DEST=path/to/solvor-checkout' >&2; exit 1; }
 	tools/export.sh '$(DEST)'
+
+verify-page: ## serve the local test webmail page on http://127.0.0.1:8765/webmail-test.html (see docs/VERIFY.md)
+	@echo 'open http://127.0.0.1:8765/webmail-test.html in your browser; Ctrl-C to stop'
+	python3 -m http.server 8765 --bind 127.0.0.1 --directory docs/verify
+
+dmg: ## Release build and a .dmg, ad-hoc signed: runs on this Mac only (see docs/RELEASING.md for signing and notarizing)
+	tools/release.sh
+
+release: ## signed, notarized dmg: make release SIGN_IDENTITY="Developer ID Application: ..." NOTARY_PROFILE=name
+	tools/release.sh --sign --notarize
 
 clean: ## remove build products
 	rm -rf build .build
