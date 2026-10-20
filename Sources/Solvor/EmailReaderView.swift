@@ -140,7 +140,7 @@ struct EmailReaderView: View {
 
     private func send() {
         guard let chosen = effective, var page else { return }
-        page.title = subject
+        page.title = Redactor.redact(subject, options: options).text
         let eml = EmailBuilder.eml(from: page, body: redaction.text)
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("email-\(UUID().uuidString.prefix(8)).eml")
         do { try eml.write(to: url, atomically: true, encoding: .utf8) } catch { problem = error.localizedDescription; return }

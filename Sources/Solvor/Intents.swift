@@ -21,7 +21,7 @@ struct RunUseCaseIntent: AppIntent {
             guard let c = AppState.shared.client else { throw IntentError.notConnected }
             return (c, AppState.shared.demo(useCase))
         }
-        let name = file.filename.isEmpty ? "file" : file.filename
+        let name = URL(fileURLWithPath: file.filename).lastPathComponent.isEmpty ? "file" : URL(fileURLWithPath: file.filename).lastPathComponent
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("intent-\(UUID().uuidString)-\(name)")
         try file.data.write(to: url)
         defer { try? FileManager.default.removeItem(at: url) }

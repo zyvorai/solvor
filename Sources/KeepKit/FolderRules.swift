@@ -19,7 +19,7 @@ public struct FolderRule: Codable, Equatable, Hashable, Identifiable, Sendable {
     }
 
     public func matches(filename: String) -> Bool {
-        guard enabled, !filename.hasPrefix(".") else { return false }
+        guard enabled, !filename.hasPrefix("."), !filename.lowercased().hasSuffix(".keep.md") else { return false }
         return patterns.contains { fnmatch($0, filename, FNM_CASEFOLD) == 0 }
     }
 }
