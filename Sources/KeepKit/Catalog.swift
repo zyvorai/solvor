@@ -36,7 +36,7 @@ public enum Catalog {
     public static func suggestions(forFileNamed name: String, among demos: [Demo]) -> [Demo] {
         let ext = (name as NSString).pathExtension.lowercased()
         guard !ext.isEmpty else { return [] }
-        let lower = name.lowercased()
+        let lower = (name as NSString).deletingPathExtension.lowercased()   // not the extension: "csv-clean" would otherwise match every .csv
         return demos.filter { $0.accepts.map { $0.lowercased() }.contains(ext) }
             .sorted { a, b in
                 let sa = lower.contains(a.id.split(separator: "-").first.map(String.init) ?? a.id) ? 0 : 1
