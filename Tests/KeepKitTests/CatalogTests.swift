@@ -20,6 +20,14 @@ final class CatalogTests: XCTestCase {
         XCTAssertTrue(Catalog.suggestions(forFileNamed: "noext", among: demos).isEmpty)
     }
 
+    func testNameTieBreakIgnoresTheExtension() {
+        let demos = [
+            Demo(id: "csv-clean", title: "", description: "", accepts: ["csv"], builtin: true, hasSample: nil, maxBytes: nil, egress: nil),
+            Demo(id: "dmv-statement", title: "", description: "", accepts: ["csv"], builtin: false, hasSample: nil, maxBytes: nil, egress: nil),
+        ]
+        XCTAssertEqual(Catalog.suggestions(forFileNamed: "dmv statement.csv", among: demos).map(\.id), ["dmv-statement", "csv-clean"])
+    }
+
     /// Every pack in the repository has a catalogue entry (skipped when the tests run outside the repository).
     func testEveryExamplePackIsInTheCatalogue() throws {
         var dir = URL(fileURLWithPath: #filePath)
