@@ -7,6 +7,7 @@ public enum KeepError: Error, Equatable, LocalizedError, Sendable {
     case transport(String)
     case decoding(String)
     case tooLarge(name: String, bytes: Int, limit: Int)
+    case noFiles
 
     public var errorDescription: String? {
         switch self {
@@ -15,6 +16,7 @@ public enum KeepError: Error, Equatable, LocalizedError, Sendable {
         case .http(let status, let message): return "The host answered \(status): \(message)"
         case .transport(let m): return "Could not reach the host: \(m)"
         case .decoding(let m): return "The host's reply was not what this app expects: \(m)"
+        case .noFiles: return "There is no file to send."
         case .tooLarge(let name, let bytes, let limit):
             return "\(name) is \(bytes / 1024) KB; this use case takes at most \(limit / 1024) KB."
         }
@@ -89,7 +91,7 @@ public struct KeepClient: Sendable {
 
     /// Run a use case on one file, or on several (one cell each). HTTP 207 (some failed) is not an error.
     public func run(demo: String, files: [URL], maxBytes: Int? = nil) async throws -> RunOutcome {
-        precondition(!files.isEmpty, "run needs at least one file")
+        guard !files.isEmpty else { throw KeepError.noFiles }
         if let maxBytes {
             for f in files {
                 let size = (try? FileManager.default.attributesOfItem(atPath: f.path)[.size] as? Int) ?? 0
