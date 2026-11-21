@@ -130,3 +130,5 @@ Evaluation is permitted for 30 days per organization under the Zyvor Production 
 ## License
 
 [Zyvor Production License v1.0](LICENSE) (SPDX `LicenseRef-Zyvor-Production-1.0`; see [NOTICE](NOTICE)). Evaluation is free for 30 days per organization; production use requires a commercial license from Zyvor AI Labs.
+
+**Price:** INR 3,999 per Mac per year incl. 18% GST in India; US$40 per Mac per year excl. tax elsewhere. Buy: [zyvor.dev/buy](https://zyvor.dev/buy). Orders of USD 5,000 or more and quotes are invoiced in USD through Skydo.
